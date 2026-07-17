@@ -2,7 +2,6 @@ import streamlit as st
 import pickle
 import numpy as np
 import os
-import sklearn  # Forces the environment to initialize sklearn before loading the pickle
 
 # Set custom layout and title configurations
 st.set_page_config(
@@ -145,6 +144,8 @@ st.markdown("""
 # Path-safe loading hook targeting 'new.pkl'
 @st.cache_resource
 def load_model():
+    # Force scikit-learn environment contextualization internally
+    import sklearn
     base_path = os.path.dirname(__file__)
     file_path = os.path.join(base_path, "new.pkl")
     with open(file_path, "rb") as file:
@@ -155,6 +156,7 @@ try:
     model = load_model()
 except Exception as e:
     st.error(f"🌱 Oh no! Error loading model binary: {e}")
+    st.info("💡 Tip: Make sure your dependencies file is named exactly 'requirements.txt' so Streamlit can install scikit-learn!")
     st.stop()
 
 # Wrap whole UI inside a centralized card container block
