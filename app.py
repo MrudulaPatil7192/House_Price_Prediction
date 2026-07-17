@@ -2,11 +2,12 @@ import streamlit as st
 import pickle
 import numpy as np
 import os
+import sklearn  # Forces the environment to initialize sklearn before loading the pickle
 
 # Set custom layout and title configurations
 st.set_page_config(
     page_title="Garden Castle Price Predictor 🌸",
-    page_icon=" Fairy Cottage Appraiser 🌸",
+    page_icon="🧚🏡",
     layout="centered"
 )
 
@@ -187,7 +188,8 @@ st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
 
 # Execution Action State
 if st.button("🔮 Cast Appraiser Spell! ✨"):
-    # Array maps directly to: [Id, OverallQual, GrLivArea, GarageCars, TotalBsmtSF, YearBuilt, FullBath, BedroomAbvGr, LotArea]
+    # Array maps directly to your model's exact features:
+    # [Id, OverallQual, GrLivArea, GarageCars, TotalBsmtSF, YearBuilt, FullBath, BedroomAbvGr, LotArea]
     features = np.array([[
         idx, overall_qual, gr_liv_area, garage_cars, total_bsmt_sf, year_built, full_bath, bedroom_abv_gr, lot_area
     ]])
