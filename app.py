@@ -1,11 +1,12 @@
 import streamlit as st
 import pickle
 import numpy as np
+import os
 
-# Set page configuration with a cute flower/garden theme
+# Set custom layout and title configurations
 st.set_page_config(
     page_title="Garden Castle Price Predictor 🌸",
-    page_icon="🧚🏡",
+    page_icon=" Fairy Cottage Appraiser 🌸",
     layout="centered"
 )
 
@@ -140,10 +141,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Load your custom KNeighborsRegressor pipeline safely
+# Path-safe loading hook targeting 'new.pkl'
 @st.cache_resource
 def load_model():
-    with open("model.pkl", "rb") as file:
+    base_path = os.path.dirname(__file__)
+    file_path = os.path.join(base_path, "new.pkl")
+    with open(file_path, "rb") as file:
         model = pickle.load(file)
     return model
 
@@ -164,7 +167,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Form layout mapped perfectly to model.feature_names_in_
+# Layout arrays configured to match dataset features exactly
 col1, col2 = st.columns(2)
 
 with col1:
@@ -184,12 +187,12 @@ st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
 
 # Execution Action State
 if st.button("🔮 Cast Appraiser Spell! ✨"):
-    # Array mapping exactly to: Id, OverallQual, GrLivArea, GarageCars, TotalBsmtSF, YearBuilt, FullBath, BedroomAbvGr, LotArea
+    # Array maps directly to: [Id, OverallQual, GrLivArea, GarageCars, TotalBsmtSF, YearBuilt, FullBath, BedroomAbvGr, LotArea]
     features = np.array([[
         idx, overall_qual, gr_liv_area, garage_cars, total_bsmt_sf, year_built, full_bath, bedroom_abv_gr, lot_area
     ]])
     
-    # Process prediction value from KNeighborsRegressor
+    # Run prediction through the scikit-learn KNeighborsRegressor pipeline
     prediction = float(model.predict(features)[0])
     
     # Determine custom badges dynamically based on valuation
