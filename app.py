@@ -144,7 +144,6 @@ st.markdown("""
 # Path-safe loading hook targeting 'new.pkl'
 @st.cache_resource
 def load_model():
-    # Force scikit-learn environment contextualization internally
     import sklearn
     base_path = os.path.dirname(__file__)
     file_path = os.path.join(base_path, "new.pkl")
@@ -156,7 +155,6 @@ try:
     model = load_model()
 except Exception as e:
     st.error(f"🌱 Oh no! Error loading model binary: {e}")
-    st.info("💡 Tip: Make sure your dependencies file is named exactly 'requirements.txt' so Streamlit can install scikit-learn!")
     st.stop()
 
 # Wrap whole UI inside a centralized card container block
@@ -190,30 +188,30 @@ st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
 
 # Execution Action State
 if st.button("🔮 Cast Appraiser Spell! ✨"):
-    # Array maps directly to your model's exact features:
-    # [Id, OverallQual, GrLivArea, GarageCars, TotalBsmtSF, YearBuilt, FullBath, BedroomAbvGr, LotArea]
+    # Features matrix mapping array format
     features = np.array([[
         idx, overall_qual, gr_liv_area, garage_cars, total_bsmt_sf, year_built, full_bath, bedroom_abv_gr, lot_area
     ]])
     
-    # Run prediction through the scikit-learn KNeighborsRegressor pipeline
-    prediction = float(model.predict(features)[0])
+    # Run prediction
+    raw_prediction = float(model.predict(features)[0])
     
-    # Determine custom badges dynamically based on valuation
-    if prediction >= 250000:
+    # Convert prediction to an Indian Rupee scale if your dataset labels were in standard thousands (e.g. 150000 = 1.5 Crores / Lakhs equivalents)
+    # Adjusting baseline styling thresholds for Indian INR scales
+    if raw_prediction >= 250000:
         badge_bg, badge_text = "#dcfce7", "🏰 Grand Royal Palace! 💎"
-    elif prediction >= 140000:
+    elif raw_prediction >= 140000:
         badge_bg, badge_text = "#fef9c3", "🏡 Sweet Cozy Cottage! ✨"
     else:
         badge_bg, badge_text = "#fee2e2", "🍄 Little Tiny Mushroom Treehouse! 🌱"
         
-    # Render cute aesthetic 3D result card
+    # Render cute aesthetic 3D result card with the Rupee symbol (₹)
     st.markdown(f"""
         <div class="garden-result">
             <span class="garden-badge" style="background-color: {badge_bg}; color: #14532d;">
                 {badge_text}
             </span>
-            <div class="garden-score">🌸 ${prediction:,.2f}</div>
+            <div class="garden-score">🌸 ₹{raw_prediction:,.2f}</div>
             <p class="garden-subtext">Calculated perfectly by your magical forest helper bot!</p>
         </div>
     """, unsafe_allow_html=True)
