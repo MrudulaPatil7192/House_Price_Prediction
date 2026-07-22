@@ -7,7 +7,7 @@ import os
 st.set_page_config(
     page_title="Property Valuation Dashboard",
     page_icon="📊",
-    layout="wide" # Wide layout mimics a Power BI landscape canvas
+    layout="wide"  # Wide layout mimics a Power BI landscape canvas
 )
 
 # Power BI Style UI Sheet Layout
@@ -22,8 +22,8 @@ st.markdown("""
     /* Top Navigation / Title Banner */
     .dashboard-header {
         background-color: #1F1F1F;
-        padding: 15px 25px;
-        border-radius: 4px;
+        padding: 20px 25px;
+        border-radius: 6px;
         margin-bottom: 20px;
         color: #FFFFFF;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -34,7 +34,7 @@ st.markdown("""
         margin: 0;
     }
     .dashboard-subtitle {
-        font-size: 12px;
+        font-size: 13px;
         color: #A19F9D;
         margin-top: 4px;
     }
@@ -43,7 +43,7 @@ st.markdown("""
     .powerbi-card {
         background-color: #FFFFFF;
         padding: 20px;
-        border-radius: 4px;
+        border-radius: 6px;
         border: 1px solid #E1DFDD;
         box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.132), 0 0.3px 0.9px 0 rgba(0,0,0,0.106);
         margin-bottom: 20px;
@@ -67,32 +67,36 @@ st.markdown("""
         align-items: center;
         background-color: #FAFAFA;
         padding: 15px;
-        border-left: 4px solid #107C41; /* Excel/PowerBI Green Accent */
+        border-left: 5px solid #107C41; /* Excel/PowerBI Green Accent */
         border-radius: 0 4px 4px 0;
+        box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
     }
     .kpi-value {
-        font-size: 32px;
+        font-size: 30px;
         font-weight: 700;
         color: #201F1E;
     }
     .kpi-label {
-        font-size: 12px;
-        font-weight: 600;
+        font-size: 11px;
+        font-weight: 700;
         color: #605E5C;
+        letter-spacing: 0.5px;
     }
     
     /* Action Button Customization */
-    .stButton > button {
+    div.stButton > button:first-child {
         width: 100%;
         background-color: #107C41 !important;
         color: #FFFFFF !important;
         border: none !important;
         padding: 12px;
         font-weight: 600;
+        font-size: 15px;
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: background-color 0.2s ease;
     }
-    .stButton > button:hover {
+    div.stButton > button:first-child:hover {
         background-color: #0B5931 !important;
     }
     </style>
@@ -101,7 +105,6 @@ st.markdown("""
 # Path-safe model loader
 @st.cache_resource
 def load_model():
-    import sklearn
     base_path = os.path.dirname(__file__)
     file_path = os.path.join(base_path, "new.pkl")
     with open(file_path, "rb") as file:
@@ -111,7 +114,8 @@ def load_model():
 try:
     model = load_model()
 except Exception as e:
-    st.error(f"Error loading analytical model: {e}")
+    st.error(f"Error loading analytical model `new.pkl`: {e}")
+    st.info("Make sure `new.pkl` is placed in the exact same directory as `app.py`.")
     st.stop()
 
 # Header Banner Canvas
@@ -152,10 +156,10 @@ with col_left:
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col_right:
-    st.markdown('<div class="powerbi-card" style="height: 100%;">', unsafe_allow_html=True)
+    st.markdown('<div class="powerbi-card">', unsafe_allow_html=True)
     st.markdown('<div class="card-title">🔮 Executive Summary Report</div>', unsafe_allow_html=True)
     
-    st.write("Review the parameter values configured in the left matrix view tiles. Click below to compute the analytical appraisal summary output matrix.")
+    st.write("Review the parameter values configured in the matrix tiles. Click below to compute the analytical appraisal output.")
     
     compute_btn = st.button("📊 Calculate Summary Analytics")
     
@@ -170,9 +174,9 @@ with col_right:
         # Run regression calculation
         raw_prediction = float(model.predict(features)[0])
         
-        # Power BI Style KPI Tile Layout Matrix
+        # Power BI Style KPI Tile
         st.markdown(f"""
-            <div class="kpi-container" style="margin-bottom: 15px;">
+            <div class="kpi-container" style="margin-bottom: 20px;">
                 <div>
                     <div class="kpi-label">PREDICTED MARKET VALUE (INR)</div>
                     <div class="kpi-value">₹{raw_prediction:,.2f}</div>
@@ -180,7 +184,7 @@ with col_right:
             </div>
         """, unsafe_allow_html=True)
         
-        # Secondary Summary Analytics Matrix Metrics
+        # Secondary Summary Table
         st.markdown(f"""
             <table style="width:100%; border-collapse: collapse; font-size: 13px; color:#323130;">
                 <tr style="background-color: #F3F2F1; border-bottom: 1px solid #E1DFDD;">
@@ -204,7 +208,6 @@ with col_right:
             </table>
         """, unsafe_allow_html=True)
     else:
-        # Default placeholder panel before evaluation trigger
         st.info("ℹ️ Input data parameters ready. Select 'Calculate Summary Analytics' to evaluate the valuation KPI dashboard canvas.")
         
     st.markdown('</div>', unsafe_allow_html=True)
