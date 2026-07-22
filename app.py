@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"  # Wide layout mimics a Power BI landscape canvas
 )
 
-# Power BI Style UI Sheet Layout with Explicit Dark Text Controls
+# Power BI Style UI Sheet Layout with Explicit Scoped Text Colors
 st.markdown("""
     <style>
     /* Power BI Canvas Background */
@@ -25,8 +25,12 @@ st.markdown("""
         padding: 20px 25px;
         border-radius: 6px;
         margin-bottom: 20px;
-        color: #FFFFFF !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Explicitly force white text for the dark banner header */
+    .dashboard-header * {
+        color: #FFFFFF !important;
     }
     .dashboard-title {
         font-size: 24px;
@@ -36,7 +40,7 @@ st.markdown("""
     }
     .dashboard-subtitle {
         font-size: 13px;
-        color: #A19F9D !important;
+        color: #CCCCCC !important;
         margin-top: 4px;
     }
     
@@ -48,7 +52,6 @@ st.markdown("""
         border: 1px solid #E1DFDD;
         box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.132), 0 0.3px 0.9px 0 rgba(0,0,0,0.106);
         margin-bottom: 20px;
-        color: #201F1E !important;
     }
     
     .card-title {
@@ -62,14 +65,19 @@ st.markdown("""
         letter-spacing: 0.5px;
     }
 
-    /* Force all Streamlit Text Elements & Labels to Dark/Black */
-    .stApp p, .stApp span, .stApp label, .stApp div, .stMarkdown {
+    /* Force all Streamlit Input Labels and Form Text to Dark/Black */
+    div[data-testid="stWidgetLabel"] label, 
+    div[data-testid="stWidgetLabel"] p, 
+    div[data-testid="stMarkdownContainer"] p, 
+    .stSlider label, 
+    .stNumberInput label {
         color: #1F1F1F !important;
+        font-weight: 600 !important;
     }
     
-    /* Fix input field label text colors explicitly */
+    /* Keep input box numbers visible inside dark/light text fields */
     div[data-baseweb="input"] input {
-        color: #FFFFFF !important; /* Keep input text inside dark input boxes white */
+        color: #FFFFFF !important;
     }
     
     /* Power BI KPI Card Elements */
@@ -133,7 +141,7 @@ except Exception as e:
     st.info("Make sure `new.pkl` is placed in the exact same directory as `app.py`.")
     st.stop()
 
-# Header Banner Canvas
+# Header Banner Canvas (Uses scoped white text styling)
 st.markdown("""
     <div class="dashboard-header">
         <div class="dashboard-title">🏠 Real Estate Valuation & Analytics Workspace</div>
