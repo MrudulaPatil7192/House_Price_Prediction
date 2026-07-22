@@ -10,54 +10,66 @@ st.set_page_config(
     layout="wide"  # Wide layout mimics a Power BI landscape canvas
 )
 
-# Power BI Style UI Sheet Layout
+# Power BI Style UI Sheet Layout with Explicit Dark Text Controls
 st.markdown("""
     <style>
     /* Power BI Canvas Background */
     .stApp {
-        background-color: #F3F2F1;
+        background-color: #F3F2F1 !important;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     /* Top Navigation / Title Banner */
     .dashboard-header {
-        background-color: #1F1F1F;
+        background-color: #1F1F1F !important;
         padding: 20px 25px;
         border-radius: 6px;
         margin-bottom: 20px;
-        color: #FFFFFF;
+        color: #FFFFFF !important;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .dashboard-title {
         font-size: 24px;
         font-weight: 600;
         margin: 0;
+        color: #FFFFFF !important;
     }
     .dashboard-subtitle {
         font-size: 13px;
-        color: #A19F9D;
+        color: #A19F9D !important;
         margin-top: 4px;
     }
     
     /* Power BI Visual Card Container */
     .powerbi-card {
-        background-color: #FFFFFF;
+        background-color: #FFFFFF !important;
         padding: 20px;
         border-radius: 6px;
         border: 1px solid #E1DFDD;
         box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,0.132), 0 0.3px 0.9px 0 rgba(0,0,0,0.106);
         margin-bottom: 20px;
+        color: #201F1E !important;
     }
     
     .card-title {
         font-size: 14px;
-        font-weight: 600;
-        color: #323130;
+        font-weight: 700;
+        color: #201F1E !important;
         border-bottom: 2px solid #F3F2F1;
         padding-bottom: 8px;
         margin-bottom: 15px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+    }
+
+    /* Force all Streamlit Text Elements & Labels to Dark/Black */
+    .stApp p, .stApp span, .stApp label, .stApp div, .stMarkdown {
+        color: #1F1F1F !important;
+    }
+    
+    /* Fix input field label text colors explicitly */
+    div[data-baseweb="input"] input {
+        color: #FFFFFF !important; /* Keep input text inside dark input boxes white */
     }
     
     /* Power BI KPI Card Elements */
@@ -65,21 +77,21 @@ st.markdown("""
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #FAFAFA;
+        background-color: #FAFAFA !important;
         padding: 15px;
-        border-left: 5px solid #107C41; /* Excel/PowerBI Green Accent */
+        border-left: 5px solid #107C41 !important;
         border-radius: 0 4px 4px 0;
         box-shadow: inset 0 0 2px rgba(0,0,0,0.05);
     }
     .kpi-value {
         font-size: 30px;
         font-weight: 700;
-        color: #201F1E;
+        color: #201F1E !important;
     }
     .kpi-label {
         font-size: 11px;
         font-weight: 700;
-        color: #605E5C;
+        color: #605E5C !important;
         letter-spacing: 0.5px;
     }
     
@@ -95,6 +107,9 @@ st.markdown("""
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         transition: background-color 0.2s ease;
+    }
+    div.stButton > button:first-child * {
+        color: #FFFFFF !important;
     }
     div.stButton > button:first-child:hover {
         background-color: #0B5931 !important;
@@ -159,7 +174,7 @@ with col_right:
     st.markdown('<div class="powerbi-card">', unsafe_allow_html=True)
     st.markdown('<div class="card-title">🔮 Executive Summary Report</div>', unsafe_allow_html=True)
     
-    st.write("Review the parameter values configured in the matrix tiles. Click below to compute the analytical appraisal output.")
+    st.markdown("<p style='color: #201F1E !important;'>Review the parameter values configured in the matrix tiles. Click below to compute the analytical appraisal output.</p>", unsafe_allow_html=True)
     
     compute_btn = st.button("📊 Calculate Summary Analytics")
     
@@ -186,24 +201,24 @@ with col_right:
         
         # Secondary Summary Table
         st.markdown(f"""
-            <table style="width:100%; border-collapse: collapse; font-size: 13px; color:#323130;">
+            <table style="width:100%; border-collapse: collapse; font-size: 13px; color:#201F1E;">
                 <tr style="background-color: #F3F2F1; border-bottom: 1px solid #E1DFDD;">
-                    <td style="padding: 10px; font-weight: 600;">Data Metric</td>
-                    <td style="padding: 10px; font-weight: 600; text-align: right;">Value Metric</td>
+                    <td style="padding: 10px; font-weight: 600; color:#201F1E;">Data Metric</td>
+                    <td style="padding: 10px; font-weight: 600; text-align: right; color:#201F1E;">Value Metric</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #F3F2F1;">
-                    <td style="padding: 10px; color:#605E5C;">Price Per SqFt</td>
-                    <td style="padding: 10px; text-align: right; font-weight:600;">₹{(raw_prediction / max(1, gr_liv_area)):,.2f}</td>
+                    <td style="padding: 10px; color:#404040;">Price Per SqFt</td>
+                    <td style="padding: 10px; text-align: right; font-weight:600; color:#201F1E;">₹{(raw_prediction / max(1, gr_liv_area)):,.2f}</td>
                 </tr>
                 <tr style="border-bottom: 1px solid #F3F2F1;">
-                    <td style="padding: 10px; color:#605E5C;">Asset Class Tier</td>
+                    <td style="padding: 10px; color:#404040;">Asset Class Tier</td>
                     <td style="padding: 10px; text-align: right; font-weight:600; color:#107C41;">
                         {"Premium Tier" if raw_prediction >= 250000 else "Standard Tier" if raw_prediction >= 140000 else "Economy Tier"}
                     </td>
                 </tr>
                 <tr>
-                    <td style="padding: 10px; color:#605E5C;">Model Engine Reference</td>
-                    <td style="padding: 10px; text-align: right; font-weight:600;">K-Neighbors Regressor</td>
+                    <td style="padding: 10px; color:#404040;">Model Engine Reference</td>
+                    <td style="padding: 10px; text-align: right; font-weight:600; color:#201F1E;">K-Neighbors Regressor</td>
                 </tr>
             </table>
         """, unsafe_allow_html=True)
